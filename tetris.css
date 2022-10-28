@@ -1,0 +1,13 @@
+body {
+  text-align: center;
+}
+
+svg text.score {
+  font-family: arial, sans-serif;
+  font-size: 36px;
+  fill: white;
+}
+
+.board_area circle, .static_group circle {
+  stroke: #eee;
+}
