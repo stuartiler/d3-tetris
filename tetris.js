@@ -14,19 +14,22 @@ var svg = d3.select("svg"),
 
 /* Specify the width and height of the
    board in number of blocks */
-var board_width = 10;
-var board_height = 15;
-var block_size = 30;
+const board_width = 10,
+      board_height = 15;
 
-/* Specify the width of the board border, which is
-   the colored area outside the board perimeter */
-var border_width = 5;
+/* Specify the block size (used for both
+   width and height) in pixels */
+const block_size = 30;
 
-/* Specify the width of the board padding, which is
-   extra space within the interior of the board area
-   (which keeps the pieces from visually touching
+/* Specify the width (in pixels) of the board border,
+   which is the colored area outside the board perimeter */
+const border_width = 5;
+
+/* Specify the width (in pixels) of the board padding,
+   which is extra space within the interior of the board
+   area (and which keeps the pieces from visually touching
    the board edges) */
-var padding_width = 3;
+const padding_width = 3;
 
 // Create the group element for the board
 var board_area = svg.append("g")
@@ -74,43 +77,43 @@ var score_text = svg.append("text")
    initial orientation, the second array contains
    the relative positions of the blocks when the
    piece has been rotated once, etc. */
-var piece_pos_square = new Array(4);
+const piece_pos_square = new Array(4);
 piece_pos_square[0] = [[0,0], [1,0], [0,1], [1,1]]
 piece_pos_square[1] = [[1,0], [1,1], [0,0], [0,1]]
 piece_pos_square[2] = [[1,1], [0,1], [1,0], [0,0]]
 piece_pos_square[3] = [[0,1], [0,0], [1,1], [1,0]]
 
-var piece_pos_line = new Array(4);
+const piece_pos_line = new Array(4);
 piece_pos_line[0] = [[-1,0], [0,0], [1,0], [2,0]]
 piece_pos_line[1] = [[0,-1], [0,0], [0,1], [0,2]]
 piece_pos_line[2] = [[1,0], [0,0], [-1,0], [-2,0]]
 piece_pos_line[3] = [[0,1], [0,0], [0,-1], [0,-2]]
 
-var piece_pos_zigzag_down = new Array(4);
+const piece_pos_zigzag_down = new Array(4);
 piece_pos_zigzag_down[0] = [[-1,0], [0,0], [0,1], [1,1]]
 piece_pos_zigzag_down[1] = [[0,-1], [0,0], [-1,0], [-1,1]]
 piece_pos_zigzag_down[2] = [[1,0], [0,0], [0,-1], [-1,-1]]
 piece_pos_zigzag_down[3] = [[0,1], [0,0], [1,0], [1,-1]]
 
-var piece_pos_zigzag_up = new Array(4);
+const piece_pos_zigzag_up = new Array(4);
 piece_pos_zigzag_up[0] = [[-1,0], [0,0], [0,-1], [1,-1]]
 piece_pos_zigzag_up[1] = [[0,-1], [0,0], [1,0], [1,1]]
 piece_pos_zigzag_up[2] = [[1,0], [0,0], [0,1], [-1,1]]
 piece_pos_zigzag_up[3] = [[0,1], [0,0], [-1,0], [-1,-1]]
 
-var piece_pos_t = new Array(4);
+const piece_pos_t = new Array(4);
 piece_pos_t[0] = [[-1,0], [0,0], [1,0], [0,1]]
 piece_pos_t[1] = [[0,-1], [0,0], [0,1], [-1,0]]
 piece_pos_t[2] = [[1,0], [0,0], [-1,0], [0,-1]]
 piece_pos_t[3] = [[0,1], [0,0], [0,-1], [1,0]]
 
-var piece_pos_l = new Array(4);
+const piece_pos_l = new Array(4);
 piece_pos_l[0] = [[0,-1], [0,0], [0,1], [1,1]]
 piece_pos_l[1] = [[1,0], [0,0], [-1,0], [-1,1]]
 piece_pos_l[2] = [[0,1], [0,0], [0,-1], [-1,-1]]
 piece_pos_l[3] = [[-1,0], [0,0], [1,0], [1,-1]]
 
-var piece_pos_j = new Array(4);
+const piece_pos_j = new Array(4);
 piece_pos_j[0] = [[0,-1], [0,0], [0,1], [-1,1]]
 piece_pos_j[1] = [[1,0], [0,0], [-1,0], [-1,-1]]
 piece_pos_j[2] = [[0,1], [0,0], [0,-1], [1,-1]]
@@ -156,7 +159,7 @@ draw_board();
 
 /* Create an interval that will trigger every
    half-second to update the game */
-var interval_length = 500;
+const interval_length = 500;
 var interval_num = setInterval(update_game, interval_length);
 
 
@@ -173,7 +176,7 @@ function handle_keydown(event) {
   }
 
   // Handle a left keypress
-  if(event.keyCode == 37) {
+  if(event.keyCode === 37) {
 
     // Move the piece one space to the left
     active_piece[0].position[0] -= 1;
@@ -181,7 +184,7 @@ function handle_keydown(event) {
     /* If the piece collides with something
        in its new location, move it back;
        otherwise, redraw the board */
-    if (check_collision() == true) {
+    if (check_collision() === true) {
       active_piece[0].position[0] += 1;
     }
     else {
@@ -190,7 +193,7 @@ function handle_keydown(event) {
 
   }
   // Handle an up keypress
-  else if(event.keyCode == 38) {
+  else if(event.keyCode === 38) {
 
     // Rotate the piece into its next orientation
     active_piece[0].orientation = (active_piece[0].orientation+1)%4;
@@ -198,8 +201,8 @@ function handle_keydown(event) {
     /* If the piece collides with something
        in its new orientation, rotate it back;
        otherwise, redraw the board */
-    if (check_collision() == true) {
-      if(active_piece[0].orientation == 0) {
+    if (check_collision() === true) {
+      if(active_piece[0].orientation === 0) {
         active_piece[0].orientation = 3;
       }
       else {
@@ -212,7 +215,7 @@ function handle_keydown(event) {
 
   }
   // Handle a right keypress
-  else if(event.keyCode == 39) {
+  else if(event.keyCode === 39) {
 
     // Move the piece one space to the right
     active_piece[0].position[0] += 1;
@@ -220,7 +223,7 @@ function handle_keydown(event) {
     /* If the piece collides with something
        in its new location, move it back;
        otherwise, redraw the board */
-    if (check_collision() == true) {
+    if (check_collision() === true) {
       active_piece[0].position[0] -= 1;
     }
     else {
@@ -229,7 +232,7 @@ function handle_keydown(event) {
 
   }
   // Handle a down keypress
-  else if (event.keyCode == 40) {
+  else if (event.keyCode === 40) {
 
     // Temporarily clear the interval
     clearInterval(interval_num);
@@ -238,7 +241,7 @@ function handle_keydown(event) {
        one space until it has a collision */
     do {
       active_piece[0].position[1] += 1;
-    } while (check_collision() == false);
+    } while (check_collision() === false);
 
     // Move the piece back up one space
     active_piece[0].position[1] -= 1;
@@ -475,7 +478,7 @@ function draw_board() {
     );
 
   // If the score text is visible, fade it out
-  if(score_text.attr("opacity") == 1) {
+  if(score_text.attr("opacity") === 1) {
       score_text.transition(t3).attr("opacity", 0);
   }
 
@@ -492,7 +495,7 @@ function update_game() {
   active_piece[0].position[1] += 1;
 
   /* If there was a collision, do the following */
-  if (check_collision() == true) {
+  if (check_collision() === true) {
 
     // Move the active piece back up by one space
     active_piece[0].position[1] -= 1;
@@ -547,7 +550,7 @@ function update_game() {
 
     /* If the newly added piece already has a collision,
        reset the board because the game is over */
-    if(check_collision()==true) {
+    if(check_collision() === true) {
       reset_board();
     }
 
@@ -569,7 +572,7 @@ function add_new_piece() {
   let new_piece = {};
 
   // Get a random integer in the range [0,6]
-  let new_piece_type = Math.floor(Math.random() * 6);
+  let new_piece_type = Math.floor(Math.random() * 7);
 
   // Set the piece's type and color based on the integer
   switch (new_piece_type) {
@@ -649,7 +652,7 @@ function clear_lines() {
       /* Scan the current row and set missing_block to
          true if there are any empty spaces */
       for(let col_num = 0; col_num < board_width; col_num++) {
-        if(board_state[col_num][row_num] == -1) {
+        if(board_state[col_num][row_num] === -1) {
           missing_block = true;
           break;
         }
@@ -657,7 +660,7 @@ function clear_lines() {
 
       /* If the current line has no missing blocks,
          do the following */
-      if(missing_block==false) {
+      if(missing_block === false) {
 
         // Loop through each column on the board
         for(let col_num = 0; col_num < board_width; col_num++) {
@@ -668,7 +671,7 @@ function clear_lines() {
           for(let i = 0; i < static_blocks.length; i++) {
 
             // When the match is found, remove the object from static_blocks
-            if(static_blocks[i].id == board_state[col_num][row_num]) {
+            if(static_blocks[i].id === board_state[col_num][row_num]) {
               static_blocks.splice(i,1);
               break;
             }
@@ -706,7 +709,7 @@ function clear_lines() {
 
     }
 
-  } while(missing_block==false);
+  } while(missing_block === false);
 
   /* If one or more lines were cleared, increase
      the player's score and make the score text
@@ -741,15 +744,15 @@ function check_collision() {
 
     /* Return true if the block is outside the
        boundaries of the board */
-    if ((block_abs_pos[block_num][1] == board_height) ||
+    if ((block_abs_pos[block_num][1] === board_height) ||
        (block_abs_pos[block_num][0] < 0) ||
-       (block_abs_pos[block_num][0] == board_width)) {
+       (block_abs_pos[block_num][0] === board_width)) {
       return true;
     }
 
     /* Return true if the block is in the same position
        as a static block already on the board */
-    if (board_state[block_abs_pos[block_num][0]][block_abs_pos[block_num][1]] != -1) {
+    if (board_state[block_abs_pos[block_num][0]][block_abs_pos[block_num][1]] !== -1) {
       return true;
     }
 
